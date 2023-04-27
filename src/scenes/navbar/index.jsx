@@ -40,7 +40,7 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `subham sharma`;
-  console.log(user.firstName);
+  // console.log(user.firstName);
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
