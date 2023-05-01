@@ -10,7 +10,7 @@ import {
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
@@ -54,6 +54,7 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
+  const [image, setImage] = useState("");
 
   const register = async (values, onSubmitProps) => {
     // this allows us to send form info with image
@@ -61,7 +62,21 @@ const Form = () => {
     for (let value in values) {
       formData.append(value, values[value]);
     }
-    formData.append("picturePath", values.picture.name);
+
+    const data = new FormData();
+    data.append("file", values.picture);
+    data.append("upload_preset", "twinster");
+    data.append("cloud_name", "dd2nvofv0");
+
+    fetch("https://api.cloudinary.com/v1_1/dd2nvofv0/image/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.url);
+        setImage(data.url);
+      });
 
     const savedUserResponse = await fetch(
       "http://localhost:3001/auth/register",
@@ -70,7 +85,7 @@ const Form = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...values, picturePath: "subham.jpg" }),
+        body: JSON.stringify({ ...values, picturePath: image }),
       }
     );
     const savedUser = await savedUserResponse.json();
@@ -101,6 +116,7 @@ const Form = () => {
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
+    console.log(values.picture);
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };
