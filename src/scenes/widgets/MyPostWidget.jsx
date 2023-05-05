@@ -20,7 +20,7 @@ import {
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
-import widgetWrapper from "components/WidgetWrapper";
+import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
@@ -72,7 +72,7 @@ const MyPostWidget = ({ picturePath }) => {
     setPosts("");
   };
   return (
-    <widgetWrapper>
+    <WidgetWrapper>
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase
@@ -178,7 +178,7 @@ const MyPostWidget = ({ picturePath }) => {
           POST
         </Button>
       </FlexBetween>
-    </widgetWrapper>
+    </WidgetWrapper>
   );
 };
 export default MyPostWidget;
