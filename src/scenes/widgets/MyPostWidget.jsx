@@ -43,8 +43,24 @@ const MyPostWidget = ({ picturePath }) => {
     formData.append("description", post);
     if (image) {
       formData.append("picture", image);
-      formData.append("picturePath", image.name);
     }
+
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "twinster");
+    data.append("cloud_name", "dd2nvofv0");
+
+    await fetch("https://api.cloudinary.com/v1_1/dd2nvofv0/image/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.url);
+        formData.append("picturePath", data.url);
+        setImage(data.url);
+      });
+    console.log(formData.picturePath);
     const response = await fetch("http://localhost:3001/posts", {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },

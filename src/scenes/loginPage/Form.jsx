@@ -68,32 +68,48 @@ const Form = () => {
     data.append("upload_preset", "twinster");
     data.append("cloud_name", "dd2nvofv0");
 
-    fetch("https://api.cloudinary.com/v1_1/dd2nvofv0/image/upload", {
+    await fetch("https://api.cloudinary.com/v1_1/dd2nvofv0/image/upload", {
       method: "post",
       body: data,
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(async (data) => {
         console.log(data.url);
         setImage(data.url);
+        const savedUserResponse = await fetch(
+          "http://localhost:3001/auth/register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ...values, picturePath: data.url }),
+          }
+        );
+        const savedUser = await savedUserResponse.json();
+        onSubmitProps.resetForm();
+
+        if (savedUser) {
+          setPageType("login");
+        }
       });
 
-    const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...values, picturePath: image }),
-      }
-    );
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
+    // const savedUserResponse = await fetch(
+    //   "http://localhost:3001/auth/register",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ ...values, picturePath: image }),
+    //   }
+    // );
+    // const savedUser = await savedUserResponse.json();
+    // onSubmitProps.resetForm();
 
-    if (savedUser) {
-      setPageType("login");
-    }
+    // if (savedUser) {
+    //   setPageType("login");
+    // }
   };
 
   const login = async (values, onSubmitProps) => {
