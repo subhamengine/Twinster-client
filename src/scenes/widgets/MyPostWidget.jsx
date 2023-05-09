@@ -61,7 +61,7 @@ const MyPostWidget = ({ picturePath }) => {
         setImage(data.url);
       });
     console.log(formData.picturePath);
-    const response = await fetch("http://localhost:3001/posts", {
+    const response = await fetch(`${process.env.REACT_APP_URL}/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
