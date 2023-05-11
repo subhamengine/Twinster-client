@@ -10,7 +10,7 @@ import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state";
+import { setPost, setPosts } from "state";
 
 const PostWidget = ({
   postId,
@@ -50,6 +50,27 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
+  const deletePost = async () => {
+    console.log("delete");
+    const response = await fetch(
+      `${process.env.REACT_APP_URL}/posts/${postId}/delete`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(await response.json());
+    const res = await fetch(`${process.env.REACT_APP_URL}/posts`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    data.reverse();
+    dispatch(setPosts({ posts: data }));
+  };
+
   return (
     <WidgetWrapper m="2rem 0">
       <Friend
@@ -57,6 +78,7 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
+        deletePost={deletePost}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
