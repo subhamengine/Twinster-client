@@ -51,7 +51,6 @@ const PostWidget = ({
   };
 
   const deletePost = async () => {
-    console.log("delete");
     const response = await fetch(
       `${process.env.REACT_APP_URL}/posts/${postId}/delete`,
       {

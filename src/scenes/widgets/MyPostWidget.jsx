@@ -56,7 +56,6 @@ const MyPostWidget = ({ picturePath }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.url);
         formData.append("picturePath", data.url);
         setImage(data.url);
       });
